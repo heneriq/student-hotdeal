@@ -1,0 +1,215 @@
+:root {
+  color-scheme: light dark;
+  --page: light-dark(#fff, #191a1c);
+  --ink: light-dark(#222426, #eeeff0);
+  --muted: light-dark(#5b6065, #adb1b5);
+  --line: light-dark(#dce0e3, #3c4044);
+  --quiet: light-dark(#f4f5f6, #25282a);
+  --accent: light-dark(#25598c, #a0c8ef);
+  --selected: light-dark(#253340, #dee6ec);
+  --on-selected: light-dark(#fff, #21272b);
+  font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif;
+}
+
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--page); color: var(--ink); font-size: 15px; line-height: 1.55; }
+body:has(dialog[open]) { overflow: hidden; }
+a { color: var(--accent); }
+button { cursor: pointer; }
+.pure-button:focus-visible, .pure-form input:focus-visible, .pure-form select:focus-visible, :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.visually-hidden, .skip-link:not(:focus) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.skip-link:focus { position: fixed; z-index: 5; top: 10px; left: 10px; padding: 8px; background: var(--page); }
+
+.container { width: min(1000px, calc(100% - 48px)); margin-inline: auto; }
+.site-header { border-bottom: 1px solid var(--line); }
+.header-inner, .header-actions, .results-toolbar { display: flex; align-items: center; }
+.header-inner { justify-content: space-between; min-height: 56px; }
+.header-actions { gap: 16px; }
+.pure-button.register-button { border-color: var(--selected); background: var(--selected); color: var(--on-selected); font-weight: 700; }
+.pure-button.register-button:hover { filter: brightness(1.16); }
+.brand { color: var(--ink); font-weight: 750; text-decoration: none; }
+.text-button { padding: 0; border: 0; background: none; color: inherit; text-align: left; }
+.header-actions .text-button, .dialog-close .text-button { min-height: 38px; color: var(--muted); font-size: 13px; }
+.text-button:hover, .brand:hover { color: var(--accent); text-decoration: underline; }
+.theme-button {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+}
+.theme-button:hover { background: var(--quiet); color: var(--accent); }
+.theme-button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.page-heading { margin: 30px 0 21px; }
+.page-heading p { margin: 0 0 4px; color: var(--muted); font-size: 13px; }
+.page-heading h1 { margin: 0; font-size: clamp(25px, 4vw, 34px); line-height: 1.3; letter-spacing: -.05em; }
+
+.filters { display: grid; gap: 10px; }
+.search-filters { display: grid; grid-template-columns: minmax(0, 300px) 112px; gap: 8px; }
+.category-filters { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
+.category-filters .pure-button { min-height: 40px; padding: 6px; white-space: nowrap; }
+.pure-form.filters input[type="search"], .pure-form.filters select {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--page);
+  color: var(--ink);
+  box-shadow: none;
+  font-size: 14px;
+}
+.pure-form.filters input::placeholder { color: var(--muted); }
+.results-toolbar { justify-content: space-between; gap: 12px; margin: 20px 0 10px; color: var(--muted); font-size: 13px; }
+.pure-button {
+  border: 1px solid var(--line);
+  background: var(--quiet);
+  color: var(--ink);
+  font-size: 13px;
+}
+.pure-button:hover { background: var(--page); color: var(--accent); }
+.pure-button-group .pure-button { margin-right: -1px; border-right: 1px solid var(--line); }
+.pure-button-group .pure-button[aria-pressed="true"], .category-filters .pure-button[aria-pressed="true"] {
+  border-color: var(--selected);
+  background: var(--selected);
+  color: var(--on-selected);
+}
+
+.deal-table.pure-table { width: 100%; border: 1px solid var(--line); border-collapse: collapse; font-size: 14px; }
+.deal-table thead { background: var(--quiet); color: var(--muted); }
+.deal-table.pure-table th, .deal-table.pure-table td { padding: 12px 13px; border-color: var(--line); }
+.deal-table.pure-table th { text-align: left; font-size: 12px; font-weight: 700; }
+.deal-table th:first-child { width: 29%; }
+.deal-table th:nth-child(2) { width: 28%; }
+.deal-table th:nth-child(3) { width: 16%; }
+.deal-table td { vertical-align: middle; }
+.deal-table td, .map-results li, .detail-dialog h2, .dialog-benefit, .detail-list dd { overflow-wrap: anywhere; }
+.deal-table tr:hover td { background: var(--quiet); }
+.deal-name { color: var(--accent); font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+.deal-table small, .map-results small { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; }
+.benefit-cell { font-weight: 650; }
+.period-cell { white-space: nowrap; }
+.proof-cell { color: var(--muted); }
+.message, .map-status { margin: 0; padding: 16px; border: 1px solid var(--line); background: var(--quiet); color: var(--muted); }
+.message p { margin: 0 0 9px; }
+
+.map-layout { display: grid; gap: 10px; }
+.map-layout.map-ready { grid-template-columns: minmax(0, 1fr) minmax(225px, 30%); }
+.deal-map { width: 100%; height: 440px; border: 1px solid var(--line); }
+.map-results { min-width: 0; max-height: 440px; margin: 0; padding: 0; overflow: auto; border: 1px solid var(--line); list-style: none; }
+.map-results li { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 10px; padding: 10px 12px; }
+.map-results li + li { border-top: 1px solid var(--line); }
+.map-results a { flex: none; font-size: 12px; }
+
+.site-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 3px 12px; margin: 22px 0; color: var(--muted); font-size: 12px; }
+.site-footer p { margin: 0; }
+.detail-dialog {
+  width: min(540px, calc(100% - 28px));
+  max-height: calc(100dvh - 28px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--page);
+  color: var(--ink);
+}
+.detail-dialog::backdrop { background: #0008; }
+.dialog-inner { position: relative; padding: 20px 23px 23px; }
+.dialog-close { position: absolute; top: 10px; right: 14px; }
+.detail-dialog h2 { margin: 0; padding-right: 36px; font-size: 22px; letter-spacing: -.035em; }
+.dialog-benefit { margin: 4px 0 0; font-weight: 700; }
+.detail-list { margin: 14px 0 0; font-size: 14px; }
+.detail-list > div { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); }
+.detail-list dt { color: var(--muted); }
+.detail-list dd { margin: 0; }
+.deal-details { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+.dialog-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.board-notice { margin: 0 0 10px; padding: 8px 12px; border: 1px solid var(--line); font-size: 13px; }
+.registration-form { margin-top: 12px; }
+.registration-form label { margin-top: 9px; font-size: 13px; font-weight: 700; }
+.pure-form.registration-form input:not([type="checkbox"]), .pure-form.registration-form select {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--page);
+  color: var(--ink);
+  box-shadow: none;
+}
+.registration-address { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 6px; }
+.registration-address .pure-button { min-height: 40px; }
+.address-search { margin: 4px 0 10px; min-height: 360px; border: 1px solid var(--line); }
+.pure-form .registration-choices { padding: 0; margin: 12px 0; }
+.pure-form .registration-choices legend { margin-bottom: 3px; padding: 0; border: 0; font-size: 13px; font-weight: 700; color: var(--ink); }
+.registration-choices small { padding-left: 4px; color: var(--muted); font-weight: 400; }
+.checkbox-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 12px; }
+.pure-form .checkbox-options label { display: flex; align-items: center; gap: 6px; min-height: 34px; margin: 0; font-weight: 400; cursor: pointer; }
+.checkbox-options input { width: 16px; height: 16px; margin: 0; flex: none; }
+.registration-extra { margin-top: 12px; }
+.registration-extra summary { color: var(--accent); cursor: pointer; font-size: 13px; }
+.registration-hint { margin: 8px 0; color: var(--muted); font-size: 13px; }
+.registration-hint:empty { display: none; }
+.registration-form > .register-button { margin-top: 10px; }
+.registration-map { height: 220px; border: 1px solid var(--line); }
+
+@media (max-width: 660px) {
+  .container { width: calc(100% - 28px); }
+  .header-inner { min-height: 52px; }
+  .header-actions { gap: 12px; }
+  .page-heading { margin: 22px 0 15px; }
+  .search-filters { grid-template-columns: minmax(0, 300px) 96px; gap: 6px; }
+  .category-filters .pure-button { font-size: 12px; }
+  .results-toolbar { margin-top: 15px; }
+  .deal-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .deal-table, .deal-table tbody { display: block; }
+  .deal-table tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 7px; padding: 9px 10px; }
+  .deal-table tr + tr { border-top: 1px solid var(--line); }
+  .deal-table.pure-table td { padding: 0; border: 0; }
+  .deal-table small { margin-top: 0; }
+  .venue-cell { grid-column: 1; }
+  .period-cell { grid-area: 1 / 2; align-self: start; text-align: right; font-size: 12px; }
+  .benefit-cell, .proof-cell { grid-column: 1 / -1; }
+  .proof-cell { font-size: 12px; }
+  .map-layout.map-ready { grid-template-columns: minmax(0, 1fr); }
+  .deal-map { height: 345px; }
+  .map-layout.map-ready .map-results { max-height: 265px; }
+}
+@media (max-width: 480px) {
+  .category-filters { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 360px) {
+  .header-actions { gap: 7px; }
+  .header-actions .register-button { padding-inline: 7px; }
+}

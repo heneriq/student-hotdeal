@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="base-uri 'none'; object-src 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="2027학년도 수능 수험생 할인 혜택을 지역별로 찾고, 할인 기간과 인증 방법을 확인하세요.">
+  <meta name="theme-color" content="#ffffff" id="theme-color">
+  <title>수험생 할인 모음 | 수험생 핫딜</title>
+  <script>
+    try {
+      const saved = localStorage.getItem("student-hotdeal-theme");
+      if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
+    } catch {}
+  </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.1.0/build/pure-min.css" integrity="sha384-kj0X2NG2KHBie8Tq8fH1kxnyWM9XsXQpq7XdwbKmFKjwwaXGKBlB2Klu3VOltSFx" crossorigin="anonymous">
+  <link rel="stylesheet" href="./assets/styles.css">
+  <script defer src="./assets/config.js"></script>
+  <script defer src="./assets/deals.js"></script>
+  <script defer src="./assets/map.js"></script>
+  <script defer src="./assets/app.js"></script>
+  <script defer src="./assets/board.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#results">할인 목록으로 건너뛰기</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="./">수험생 핫딜</a>
+      <nav class="header-actions" aria-label="사이트 메뉴">
+        <button class="pure-button register-button" id="register-button" type="button">할인 등록</button>
+        <button class="text-button" id="guide-button" type="button">인증 안내</button>
+        <button class="theme-button" id="theme-button" type="button" aria-label="다크 모드로 전환" title="다크 모드로 전환">
+          <svg id="theme-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.8 14.1A9 9 0 0 1 9.9 3.2a9 9 0 1 0 10.9 10.9Z"/>
+          </svg>
+          <svg id="theme-sun" viewBox="0 0 24 24" aria-hidden="true" hidden>
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M19 5l-1.5 1.5m-11 11L5 19"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-heading">
+      <p id="season-label">2027학년도 수능</p>
+      <h1>수험생 할인 모음</h1>
+    </div>
+
+    <div class="pure-form filters" aria-label="할인 검색 및 필터" role="search">
+      <div class="search-filters">
+        <label class="visually-hidden" for="search-input">장소 또는 혜택 검색</label>
+        <input id="search-input" type="search" placeholder="장소 또는 혜택 검색" autocomplete="off">
+        <label class="visually-hidden" for="region-filter">지역</label>
+        <select id="region-filter"><option value="">전국</option></select>
+      </div>
+      <div class="category-filters" id="category-filters" role="group" aria-label="카테고리"></div>
+    </div>
+
+    <section id="results" aria-label="할인 검색 결과" tabindex="-1">
+      <div class="results-toolbar">
+        <span id="result-count" role="status">할인 혜택</span>
+        <div class="pure-button-group" role="group" aria-label="보기 방식">
+          <button class="pure-button" type="button" data-view="list" aria-pressed="true">목록</button>
+          <button class="pure-button" type="button" data-view="map" aria-pressed="false">지도</button>
+        </div>
+      </div>
+      <p class="board-notice" id="board-notice" role="status" hidden></p>
+      <table class="pure-table pure-table-horizontal deal-table" id="deal-table" aria-label="할인 장소" role="table" hidden>
+        <thead role="rowgroup">
+          <tr role="row">
+            <th scope="col" role="columnheader">장소</th>
+            <th scope="col" role="columnheader">혜택</th>
+            <th scope="col" role="columnheader">기간</th>
+            <th scope="col" role="columnheader">인증 방법</th>
+          </tr>
+        </thead>
+        <tbody role="rowgroup" id="deal-rows"></tbody>
+      </table>
+      <div class="map-layout" id="map-layout" hidden>
+        <p class="map-status" id="map-status" role="status"></p>
+        <div class="deal-map" id="deal-map" role="region" aria-label="할인 장소 Google 지도" tabindex="-1" hidden></div>
+        <ul class="map-results" id="map-results" aria-label="검색된 할인 장소"></ul>
+      </div>
+      <div class="message" id="empty-state" hidden>
+        <p>조건에 맞는 할인이 없습니다.</p>
+        <button class="pure-button" id="reset-filters" type="button">필터 초기화</button>
+      </div>
+      <noscript><p class="message">할인 검색과 지도를 사용하려면 JavaScript를 켜 주세요.</p></noscript>
+    </section>
+
+    <footer class="site-footer">
+      <p>© heneriq. All rights reserved.</p>
+      <a href="https://github.com/heneriq/student-hotdeal">GitHub</a>
+    </footer>
+  </main>
+
+  <dialog class="detail-dialog" id="dialog" aria-labelledby="dialog-title">
+    <div class="dialog-inner">
+      <form method="dialog" class="dialog-close">
+        <button class="text-button" type="submit" autofocus>닫기</button>
+      </form>
+      <div id="dialog-content"></div>
+    </div>
+  </dialog>
+  <dialog class="detail-dialog" id="register-dialog" aria-labelledby="register-title">
+    <div class="dialog-inner">
+      <div class="dialog-close"><button class="text-button" id="register-close" type="button">닫기</button></div>
+      <h2 id="register-title">할인 등록</h2>
+      <form class="pure-form pure-form-stacked registration-form" id="register-form">
+        <label for="register-name">장소 또는 지점명</label>
+        <input id="register-name" name="name" maxlength="80" required autofocus>
+        <label for="register-address">장소 주소</label>
+        <div class="registration-address">
+          <input id="register-address" name="address" maxlength="180" placeholder="도로명 주소 또는 지번">
+          <button class="pure-button" id="find-address" type="button" aria-expanded="false" aria-controls="address-search">주소 검색</button>
+        </div>
+        <div class="address-search" id="address-search" hidden></div>
+        <label for="register-region">지역</label>
+        <select id="register-region" name="region"><option value="">지역 선택</option></select>
+        <div class="registration-location" id="register-location" hidden>
+          <div class="dialog-actions">
+            <button class="pure-button" id="pick-location" type="button">지도에서 직접 선택</button>
+            <button class="pure-button" id="clear-location" type="button" hidden>핀 지우기</button>
+          </div>
+          <p class="registration-hint" id="location-hint" role="status"></p>
+          <div class="registration-map" id="register-map" aria-label="할인 장소 위치 선택" hidden></div>
+        </div>
+        <label for="register-benefit">할인 혜택</label>
+        <input id="register-benefit" name="benefit" maxlength="160" placeholder="예: 입장권 50% 할인" required>
+        <fieldset class="registration-choices">
+          <legend>수험생 인증 방법 <small>하나 이상 선택</small></legend>
+          <div class="checkbox-options" id="register-verification-methods"></div>
+        </fieldset>
+        <fieldset class="registration-choices">
+          <legend>카테고리 <small>하나 이상 선택</small></legend>
+          <div class="checkbox-options" id="register-categories"></div>
+        </fieldset>
+        <label for="register-source">행사 출처 링크</label>
+        <input id="register-source" name="source" type="url" inputmode="url" maxlength="800" pattern="https?://.+" required>
+        <details class="registration-extra">
+          <summary>할인 종료일 추가</summary>
+          <label for="register-ends">할인 종료일</label>
+          <input id="register-ends" name="ends" type="date">
+        </details>
+        <p class="registration-hint" id="registration-status" role="status"></p>
+        <button class="pure-button register-button" id="register-submit" type="submit">등록하기</button>
+      </form>
+    </div>
+  </dialog>
+</body>
+</html>

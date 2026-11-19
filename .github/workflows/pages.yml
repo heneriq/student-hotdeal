@@ -1,0 +1,61 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - name: Prepare static site
+        env:
+          GOOGLE_MAPS_API_KEY: ${{ vars.GOOGLE_MAPS_API_KEY }}
+          GOOGLE_MAPS_MAP_ID: ${{ vars.GOOGLE_MAPS_MAP_ID }}
+          BOARD_API_URL: ${{ vars.BOARD_API_URL }}
+        run: |
+          mkdir -p _site/assets
+          cp index.html _site/
+          cp assets/{app.js,board.js,deals.js,map.js,styles.css} _site/assets/
+          python3 -c '
+          import json, os
+          from urllib.parse import urlsplit
+          board_url = os.environ["BOARD_API_URL"].strip()
+          if board_url:
+              url = urlsplit(board_url)
+              if url.scheme != "https" or not url.hostname or url.username is not None or url.password is not None:
+                  raise SystemExit("BOARD_API_URL must be an HTTPS URL without credentials.")
+          print("const siteConfig = " + json.dumps({
+              "googleMapsApiKey": os.environ["GOOGLE_MAPS_API_KEY"],
+              "googleMapsMapId": os.environ["GOOGLE_MAPS_MAP_ID"],
+              "boardApiUrl": board_url,
+          }) + ";")
+          ' > _site/assets/config.js
+      - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with:
+          path: _site
+
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4

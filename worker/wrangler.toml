@@ -1,0 +1,19 @@
+name = "student-hotdeal-board"
+main = "board.mjs"
+compatibility_date = "2026-11-19"
+
+[vars]
+ALLOWED_ORIGINS = "https://heneriq.github.io"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "student-hotdeal"
+database_id = "9e86ee83-3abc-4d07-b217-b836f2838ea2"
+
+[[ratelimits]]
+name = "POST_LIMIT"
+namespace_id = "762401"
+
+[ratelimits.simple]
+limit = 20
+period = 60
